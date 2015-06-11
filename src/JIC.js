@@ -43,18 +43,19 @@ var jic = {
         },
 
         /**
-         * Receives an Image Object and upload it to the server via ajax
+         * Receives an Image Object and uploads it to the server via ajax
          * @param {Image} compressed_img_obj The Compressed Image Object
          * @param {String} The server side url to send the POST request
          * @param {String} file_input_name The name of the input that the server will receive with the file
          * @param {String} filename The name of the file that will be sent to the server
-         * @param {function} successCallback The callback to trigger when the upload is succesful.
+         * @param {function} successCallback The callback to trigger when the upload is successful.
          * @param {function} (OPTIONAL) errorCallback The callback to trigger when the upload failed.
 	     * @param {function} (OPTIONAL) duringCallback The callback called to be notified about the image's upload progress.
 	     * @param {Object} (OPTIONAL) customHeaders An object representing key-value  properties to inject to the request header.
+	     * @param {String} (OPTIONAL) HTTPMethod A string representing the HTTP verb associated with this upload. 
          */
 
-        upload: function(compressed_img_obj, upload_url, file_input_name, filename, successCallback, errorCallback, duringCallback, customHeaders){
+        upload: function(compressed_img_obj, upload_url, file_input_name, filename, successCallback, errorCallback, duringCallback, customHeaders, HTTPMethod){
 
 
             var cvs = document.createElement('canvas');
@@ -81,7 +82,11 @@ var jic = {
             data = data.replace('data:' + type + ';base64,', '');
             
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', upload_url, true);
+	    if (HTTPMethod && typeof HTTPMethod === "string") {
+	        xhr.open(HTTPMethod, upload_url, true);
+	    }else {
+            	xhr.open('POST', upload_url, true);
+	    }
             var boundary = 'someboundary';
 
             xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
